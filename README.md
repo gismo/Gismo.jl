@@ -1,3 +1,5 @@
+[![Build Status](https://github.com/gismo/Gismo.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/gismo/Gismo.jl/actions/workflows/CI.yml?query=branch%3Amain)
+
 # Gismo.jl: Geometry + Simulation Modules meet Julia
 The Gismo.jl package provides an interface to the [Geometry + Simulation Modules](https://github.com/gismo/gismo) inside Julia.
 
@@ -38,7 +40,3 @@ cd path/to/gismo/
 cd optional
 julia -e 'using Pkg; Pkg.develop(path="Gismo.jl")'
 ```
-
-
-[![Build Status](https://github.com/gismo/Gismo.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/gismo/Gismo.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Coverage](https://codecov.io/gh/gismo/Gismo.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/gismo/Gismo.jl)

@@ -17,4 +17,4 @@ BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 StatsPlots = "f3b207a7-027a-5e70-b257-86293d7955fd"
 
 [targets]
-test = ["BenchmarkPlots", "BenchmarkTools", "StatsPlots"]
+test = ["Test"]
