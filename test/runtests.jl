@@ -1,21 +1,22 @@
 using Gismo
 using Test
+import Gismo.size
 
-@testset verbose = true "Gismo.jl" begin
+@testset verbose = true "jl" begin
     @testset verbose = true "bases" begin
         @testset "constructors" begin
-            @test_nowarn(KV = Gismo.KnotVector([0.,0.,0.,1.,1.,1.]))
-            KV = Gismo.KnotVector([0.,0.,0.,1.,1.,1.])
-            @test_nowarn(TBB = Gismo.TensorBSplineBasis(KV,KV))
-            TBB = Gismo.TensorBSplineBasis(KV,KV)
-            @test_nowarn(THB = Gismo.THBSplineBasis(TBB))
-            THB = Gismo.THBSplineBasis(TBB)
+            @test_nowarn(KV = KnotVector([0.,0.,0.,1.,1.,1.]))
+            KV = KnotVector([0.,0.,0.,1.,1.,1.])
+            @test_nowarn(TBB = TensorBSplineBasis(KV,KV))
+            TBB = TensorBSplineBasis(KV,KV)
+            @test_nowarn(THB = THBSplineBasis(TBB))
+            THB = THBSplineBasis(TBB)
         end
 
         # @testset "print" begin
-        #     KV = Gismo.KnotVector([0.,0.,0.,1.,1.,1.])
-        #     TBB = Gismo.TensorBSplineBasis(KV,KV)
-        #     THB = Gismo.THBSplineBasis(TBB)
+        #     KV = KnotVector([0.,0.,0.,1.,1.,1.])
+        #     TBB = TensorBSplineBasis(KV,KV)
+        #     THB = THBSplineBasis(TBB)
 
         #     oldstd = stdout
         #     redirect_stdout(devnull)
@@ -26,47 +27,47 @@ using Test
         # end
 
         @testset "refinement" begin
-            KV = Gismo.KnotVector([0.,0.,0.,1.,1.,1.])
-            TBB = Gismo.TensorBSplineBasis(KV,KV)
-            THB = Gismo.THBSplineBasis(TBB)
-            @test_nowarn(Gismo.uniformRefine(TBB))
-            @test_nowarn(Gismo.uniformRefine(THB))
+            KV = KnotVector([0.,0.,0.,1.,1.,1.])
+            TBB = TensorBSplineBasis(KV,KV)
+            THB = THBSplineBasis(TBB)
+            @test_nowarn(uniformRefine!(TBB))
+            @test_nowarn(uniformRefine!(THB))
             boxes = Matrix{Cdouble}([0.0 0.5; 0.0 0.5])
-            @test_nowarn(Gismo.refine(THB,boxes))
-            boxes = Vector{Int32}([1,0,0,2,2])
-            @test_nowarn(Gismo.refineElements(THB,boxes))
+            @test_nowarn(refine!(THB,boxes))
+            boxes = Vector{Int}([1,0,0,2,2])
+            @test_nowarn(refineElements!(THB,boxes))
         end
 
 
     end
     @testset verbose = true "splines" begin
         @testset "constructors" begin
-            KV = Gismo.KnotVector([0.,0.,0.,1.,1.,1.])
-            TBB = Gismo.TensorBSplineBasis(KV,KV)
-            THB = Gismo.THBSplineBasis(TBB)
+            KV = KnotVector([0.,0.,0.,1.,1.,1.])
+            TBB = TensorBSplineBasis(KV,KV)
+            THB = THBSplineBasis(TBB)
 
-            coefs_TBB = rand(Gismo.size(TBB),3)
-            @test_nowarn(TB = Gismo.TensorBSpline(TBB,coefs_TBB))
-            coefs_THB = rand(Gismo.size(THB),3)
-            @test_nowarn(THB = Gismo.TensorBSpline(THB,coefs_THB))
+            coefs_TBB = rand(size(TBB),3)
+            @test_nowarn(TB = TensorBSpline(TBB,coefs_TBB))
+            coefs_THB = rand(size(THB),3)
+            @test_nowarn(THB = TensorBSpline(THB,coefs_THB))
         end
 
         @testset "evaluation" begin
-            KV = Gismo.KnotVector([0.,0.,0.,1.,1.,1.])
-            TBB = Gismo.TensorBSplineBasis(KV,KV)
-            THB = Gismo.THBSplineBasis(TBB)
-            coefs_TBB = rand(Gismo.size(TBB),3)
-            TB = Gismo.TensorBSpline(TBB,coefs_TBB)
-            coefs_THB = rand(Gismo.size(THB),3)
-            THB = Gismo.TensorBSpline(THB,coefs_THB)
+            KV = KnotVector([0.,0.,0.,1.,1.,1.])
+            TBB = TensorBSplineBasis(KV,KV)
+            THB = THBSplineBasis(TBB)
+            coefs_TBB = rand(size(TBB),3)
+            TB = TensorBSpline(TBB,coefs_TBB)
+            coefs_THB = rand(size(THB),3)
+            THB = TensorBSpline(THB,coefs_THB)
 
             N = 10
             points1D = range(0,stop=1,length=N)
             points2D = zeros(2,N*N)
             points2D[1,:] = repeat(points1D, N)
             points2D[2,:] = repeat(points1D, inner=N)
-            @test_nowarn(ev = Gismo.asMatrix(Gismo.eval(TB,points2D)))
-            @test_nowarn(ev = Gismo.asMatrix(Gismo.eval(THB,points2D)))
+            @test_nowarn(ev = asMatrix(val(TB,points2D)))
+            @test_nowarn(ev = asMatrix(val(THB,points2D)))
         end
     end
 end

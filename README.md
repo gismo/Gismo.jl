@@ -14,10 +14,10 @@ The Gismo.jl package can be directly downloaded from Julia's package management 
 ```
 ] add Gismo
 ```
-This command fetches the dependency [`gismo_jll`](LINK) contaning pre-compiled library files, and it fetches the current repository which calls `gismo_jll`.
+This command fetches the dependency [`gismo_jll`](https://github.com/JuliaBinaryWrappers/gismo_jll.jl) contaning pre-compiled library files, and it fetches the current repository which calls `gismo_jll`.
 
 ### Enabling Gismo.jl locally
-Alternatively, one can use a local build of G+Smo as a back-end for the Julia bindings. This requires the [`gsCInterface`](LINK) module to be compiled, and the Gismo.jl package to be fetched as a submodule in G+Smo.
+Alternatively, one can use a local build of G+Smo as a back-end for the Julia bindings. This requires the [`gsCInterface`](https://github.com/gismo/gsCInterface) module to be compiled, and the Gismo.jl package to be fetched as a submodule in G+Smo.
 
 #### a. Fetching and compiling the required G+Smo submodules
 Enable the `gsCInterface` and the `Gismo.jl` modules inside G+Smo

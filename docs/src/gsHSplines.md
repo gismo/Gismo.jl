@@ -1,5 +1,7 @@
 # gsHSplines
 
+The methods in `gsHSplines` contain methods for hierarchical splines.
+
 ## Function Documentation
 ```@autodocs
 Modules = [Gismo]

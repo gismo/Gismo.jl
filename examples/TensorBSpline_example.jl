@@ -1,16 +1,19 @@
 using Plots
 using Gismo
+import Gismo.size
 
-KV = Gismo.KnotVector([0.,0.,0.,1.,1.,1.])
-TBB = Gismo.TensorBSplineBasis(KV,KV)
-print("The size of the basis is: ",Gismo.size(TBB),"\n")
-Gismo.uniformRefine(TBB)
-print("The size of the basis is: ",Gismo.size(TBB),"\n")
+KV = KnotVector([0.,0.,0.,1.,1.,1.])
+TBB = TensorBSplineBasis(KV,KV)
+print("The size of the basis is: ",size(TBB),"\n")
+uniformRefine!(TBB)
+print("The size of the basis is: ",size(TBB),"\n")
 
 # Create a matrix of random coefficients
-coefs = rand(Gismo.size(TBB),3)
+coefs = rand(size(TBB),3)
 # Create a BSpline geometry
-TB = Gismo.TensorBSpline(TBB,coefs)
+TB = TensorBSpline(TBB,coefs)
+
+Gismo.size(KV)
 
 # Create a matrix of linearly spaced evaluation points
 N = 10
@@ -21,7 +24,7 @@ points2D = zeros(2,N*N)
 points2D[1,:] = repeat(points1D, N)
 points2D[2,:] = repeat(points1D, inner=N)
 
-ev = Gismo.asMatrix(Gismo.eval(TB,points2D))
+ev = asMatrix(val(TB,points2D))
 
 # Plot the geometry
 surface!(ev[1,:],ev[2,:],ev[3,:],legend=false)
