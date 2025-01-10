@@ -178,7 +178,7 @@ Refines a basis
 - `boxes::Vector{Cint}`: the boxes to refine (in index format)
 
 """
-function refineElements!(obj::Basis,boxes::Vector{Int})::Nothing
+function refineElements!(obj::Basis,boxes::Vector{Cint})::Nothing
     @assert mod(length(boxes),2*domainDim(obj)+1)==0 "Boxes should have size 2*domainDim+1"
     ccall((:gsBasis_refineElements,libgismo),Cvoid,
             (Ptr{gsCBasis},Ptr{Cint},Cint),

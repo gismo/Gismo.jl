@@ -1,13 +1,10 @@
 using Gismo
 using Plots
 
-# Create the knot vector
-KV = KnotVector([0.,0.,0.,1.,1.,1.])
-
 # Generate random parameters and points
 num_points = 1000
-pars = rand(num_points, 2)  # 2D parameters in [0, 1] interval
-points = zeros(num_points, 3)  # 3D points
+pars = rand(Float64,(num_points, 2))  # 2D parameters in [0, 1] interval
+points = zeros(Float64,(num_points, 3))  # 3D points
 # Define the radius of the circle
 radius = 0.25
 
@@ -17,15 +14,19 @@ for i in 1:num_points
     z = ifelse((x - 0.5)^2 + (y - 0.5)^2 <= radius^2, 1.0, 0.0)
     points[i, :] = [x, y, z]
 end
+pars=Matrix(pars')
+points=Matrix(points')
 
-
+# Create the knot vector
+KV = KnotVector([0.,0.,0.,1.,1.,1.])
 # Define the basis using the knots
 BB2 = TensorBSplineBasis(KV, KV)
-pars=pars'
-points=points'
+uniformRefine!(BB2)
+uniformRefine!(BB2)
+uniformRefine!(BB2)
+
 # Create the fitter
 fitter = Fitting(pars, points, BB2)
-
 # Perform the parameter correction
 parameterCorrection!(fitter)
 # Perform the least squares error approximation
