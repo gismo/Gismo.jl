@@ -1,6 +1,5 @@
 using Plots
 using Gismo
-import Gismo.size
 
 KV = KnotVector([0.,0.,0.,1.,1.,1.])
 BB = BSplineBasis(KV)

@@ -95,11 +95,8 @@ kv = KnotVector(Float64[0.,0.,0.,0.,0.5,1.,1.,1.,1.])
 # output
 ```
 """
-function size(kv::KnotVector)::Int
-    return ccall((:gsKnotVector_size,libgismo),Cint,(Ptr{gsCKnotVector},),kv.ptr)
-end
 function Base.size(kv::KnotVector)::Int
-    return Gismo.size(kv)
+    return ccall((:gsKnotVector_size,libgismo),Cint,(Ptr{gsCKnotVector},),kv.ptr)
 end
 
 """
