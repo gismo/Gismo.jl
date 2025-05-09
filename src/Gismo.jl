@@ -1,3 +1,6 @@
+# Import Base.size to be able to overload it
+import Base.size
+
 module Gismo
 
 import gismo_jll:libgismo

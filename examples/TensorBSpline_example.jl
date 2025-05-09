@@ -1,6 +1,5 @@
 using Plots
 using Gismo
-import Gismo.size
 
 KV = KnotVector([0.,0.,0.,1.,1.,1.])
 TBB = TensorBSplineBasis(KV,KV)
@@ -12,8 +11,6 @@ print("The size of the basis is: ",size(TBB),"\n")
 coefs = rand(size(TBB),3)
 # Create a BSpline geometry
 TB = TensorBSpline(TBB,coefs)
-
-Gismo.size(KV)
 
 # Create a matrix of linearly spaced evaluation points
 N = 10

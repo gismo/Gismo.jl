@@ -1,6 +1,5 @@
 using Gismo
 using Test
-import Gismo.size
 
 @testset verbose = true "jl" begin
     @testset verbose = true "bases" begin

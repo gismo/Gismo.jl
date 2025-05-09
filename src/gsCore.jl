@@ -148,11 +148,8 @@ Returns the size of a basis
 - `obj::Basis`: a Gismo Basis
 
 """
-function size(obj::Basis)::Int
-    return ccall((:gsBasis_size,libgismo),Cint,(Ptr{gsCBasis},),obj.ptr)
-end
 function Base.size(obj::Basis)::Int
-    return Gismo.size(obj)
+    return ccall((:gsBasis_size,libgismo),Cint,(Ptr{gsCBasis},),obj.ptr)
 end
 
 """
@@ -285,7 +282,7 @@ Returns the evaluation of a single basis function
 - `u::Matrix{Cdouble}`: a matrix of points
 
 """
-function evalSingle(obj::Basis,i::Int,u::Matrix{Cdouble})::EigenMatrix
+function val(obj::Basis,i::Int,u::Matrix{Cdouble})::EigenMatrix
     @assert Base.size(u,1)==domainDim(obj) "Domain dimension should be equal to the number of rows of the points"
     uu = EigenMatrix(Base.size(u,1), Base.size(u,2), pointer(u) )
     result = EigenMatrix()
@@ -304,7 +301,7 @@ Returns the derivative of a single basis function
 - `u::Matrix{Cdouble}`: a matrix of points
 
 """
-function derivSingle(obj::Basis,i::Int,u::Matrix{Cdouble})::EigenMatrix
+function deriv(obj::Basis,i::Int,u::Matrix{Cdouble})::EigenMatrix
     @assert Base.size(u,1)==domainDim(obj) "Domain dimension should be equal to the number of rows of the points"
     uu = EigenMatrix(Base.size(u,1), Base.size(u,2), pointer(u) )
     result = EigenMatrix()
@@ -323,7 +320,7 @@ Returns the second derivative of a single basis function
 - `u::Matrix{Cdouble}`: a matrix of points
 
 """
-function deriv2Single(obj::Basis,i::Int,u::Matrix{Cdouble})::EigenMatrix
+function deriv2(obj::Basis,i::Int,u::Matrix{Cdouble})::EigenMatrix
     @assert Base.size(u,1)==domainDim(obj) "Domain dimension should be equal to the number of rows of the points"
     uu = EigenMatrix(Base.size(u,1), Base.size(u,2), pointer(u) )
     result = EigenMatrix()
@@ -644,7 +641,7 @@ Returns the size of a MultiPatch (number of patches)
 - `obj::MultiPatch`: a Gismo MultiPatch
 
 """
-function size(obj::MultiPatch)::Int
+function Base.size(obj::MultiPatch)::Int
     return ccall((:gsFunctionSet_nPieces,libgismo),Cint,(Ptr{gsCFunctionSet},),obj.ptr)
 end
 
