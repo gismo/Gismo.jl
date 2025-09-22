@@ -1,6 +1,6 @@
 module Gismo
 
-import gismo_jll:libgismo
+import gismo_jll: libgismo
 
 # Forward declaration of structs
 include("Declarations.jl")
@@ -30,7 +30,5 @@ include("gsNurbs.jl")
 include("gsPde.jl")
 
 ####### SUBMODULES
-
-
 
 end #module

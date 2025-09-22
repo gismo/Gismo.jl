@@ -1,15 +1,14 @@
 export
-    Fitting,
-    destroy!,
-    compute!,
-    parameterCorrection!,
-    computeErrors!,
-    minPointError,
-    maxPointError,
-    pointWiseErrors,
-    numPointsBelow,
-    result
-    #= TODO =#
+       Fitting,
+       destroy!,
+       compute!,
+       parameterCorrection!,
+       computeErrors!,
+       minPointError,
+       maxPointError,
+       pointWiseErrors,
+       numPointsBelow,
+       result#= TODO =#
 
 ########################################################################
 # gsFitting
@@ -29,10 +28,10 @@ mutable struct Fitting
     - `delete::Bool`: Whether to destroy the fitting structure when unused
 
     """
-    function Fitting(opt::Ptr{gsCFitting},delete::Bool=true)::Fitting
+    function Fitting(opt::Ptr{gsCFitting}, delete::Bool = true)::Fitting
         b = new(opt)
         if (delete)
-            finalizer(destroy!,b)
+            finalizer(destroy!, b)
         end
         return b
     end
@@ -46,19 +45,22 @@ mutable struct Fitting
     - `basis::Basis`: a Basis structure containing the desired basis
 
     """
-    function Fitting(parValues::AbstractMatrix{Cdouble}, pts::AbstractMatrix{Cdouble}, basis::Basis)::Fitting
-        @assert Base.size(parValues,2) == Base.size(pts,2) "Fitting: parValues and points must have the same number of columns"
-        param_values = EigenMatrix(Base.size(parValues,1),Base.size(parValues,2),pointer(parValues))
-        points = EigenMatrix(Base.size(pts,1),Base.size(pts,2),pointer(pts))
-        fitter = ccall((:gsFitting_create,libgismo),Ptr{gsCFitting},(Ptr{EigenMatrix},Ptr{EigenMatrix},Ptr{gsCBasis}),param_values.ptr,points.ptr,basis.ptr)
+    function Fitting(parValues::AbstractMatrix{Cdouble},
+            pts::AbstractMatrix{Cdouble}, basis::Basis)::Fitting
+        @assert Base.size(parValues, 2) == Base.size(pts, 2) "Fitting: parValues and points must have the same number of columns"
+        param_values = EigenMatrix(
+            Base.size(parValues, 1), Base.size(parValues, 2), pointer(parValues))
+        points = EigenMatrix(Base.size(pts, 1), Base.size(pts, 2), pointer(pts))
+        fitter = ccall((:gsFitting_create, libgismo), Ptr{gsCFitting},
+            (Ptr{EigenMatrix}, Ptr{EigenMatrix}, Ptr{gsCBasis}),
+            param_values.ptr, points.ptr, basis.ptr)
         return Fitting(fitter)
     end
 
     function destroy!(fit::Fitting)
-        ccall((:gsFitting_delete,libgismo),Cvoid,(Ptr{gsCFitting},),fit.ptr)
+        ccall((:gsFitting_delete, libgismo), Cvoid, (Ptr{gsCFitting},), fit.ptr)
     end
 end
-
 
 """
 compute!(fit::Fitting, lambda::Cdouble=0.0)
@@ -69,8 +71,9 @@ Computes the least squares fit
 - `lambda::Cdouble`: the value to assign to the lambda ridge parameter
 
 """
-function compute!(fit::Fitting, lambda::Cdouble=0.0)
-    ccall((:gsFitting_compute,libgismo),Cvoid,(Ptr{gsCFitting},Cdouble),fit.ptr,lambda)
+function compute!(fit::Fitting, lambda::Cdouble = 0.0)
+    ccall(
+        (:gsFitting_compute, libgismo), Cvoid, (Ptr{gsCFitting}, Cdouble), fit.ptr, lambda)
 end
 
 """
@@ -84,10 +87,12 @@ Performs the parameters corrections step
 - `tol0rth::Cdouble`: The desired value of the tolleance
 
 """
-function parameterCorrection!(fit::Fitting, accuracy::Cdouble=1.0, maxIter::Int=Int(10), tol0rth::Cdouble=1e-6)
+function parameterCorrection!(fit::Fitting, accuracy::Cdouble = 1.0,
+        maxIter::Int = Int(10), tol0rth::Cdouble = 1e-6)
     @assert maxIter >= 0 "Fitting: cannot have a negative number of iterations!"
     @assert accuracy >= 0 "Fitting: cannot have a negative accuracy!"
-    ccall((:gsFitting_parameterCorrection,libgismo),Cvoid,(Ptr{gsCFitting},Cdouble,Cint,Cdouble),fit.ptr,accuracy,maxIter,tol0rth)
+    ccall((:gsFitting_parameterCorrection, libgismo), Cvoid,
+        (Ptr{gsCFitting}, Cdouble, Cint, Cdouble), fit.ptr, accuracy, maxIter, tol0rth)
 end
 
 """
@@ -99,7 +104,7 @@ Computes the error for each point
 
 """
 function computeErrors!(fit::Fitting)
-    ccall((:gsFitting_computeErrors,libgismo),Cvoid,(Ptr{gsCFitting},),fit.ptr)
+    ccall((:gsFitting_computeErrors, libgismo), Cvoid, (Ptr{gsCFitting},), fit.ptr)
 end
 
 """
@@ -113,7 +118,8 @@ Returns the smallest error obtained between all the points
 
 """
 function minPointError(fit::Fitting)::Cdouble
-    min_error=ccall((:gsFitting_minPointError,libgismo),Cdouble,(Ptr{gsCFitting},),fit.ptr)
+    min_error=ccall(
+        (:gsFitting_minPointError, libgismo), Cdouble, (Ptr{gsCFitting},), fit.ptr)
     return min_error
 end
 
@@ -128,7 +134,8 @@ Returns the maximum error obtained
 
 """
 function maxPointError(fit::Fitting)::Cdouble
-    max_err=ccall((:gsFitting_maxPointError,libgismo),Cdouble,(Ptr{gsCFitting},),fit.ptr)
+    max_err=ccall(
+        (:gsFitting_maxPointError, libgismo), Cdouble, (Ptr{gsCFitting},), fit.ptr)
     return max_err
 end
 
@@ -144,7 +151,8 @@ Returns the error obtained for each point
 
 """
 function pointWiseErrors(fit::Fitting)::Ptr{Cdouble}
-    errors=ccall((:gsFitting_pointWiseErrors,libgismo),Ptr{Cdouble},(Ptr{gsCFitting},),fit.ptr)
+    errors=ccall(
+        (:gsFitting_pointWiseErrors, libgismo), Ptr{Cdouble}, (Ptr{gsCFitting},), fit.ptr)
     return errors
 end
 
@@ -162,7 +170,8 @@ Returns the number of points where the error is below the threshold
 """
 function numPointsBelow(fit::Fitting, threshold::Cdouble)::Int
     @assert threshold >= 0 "The threshold must be a positive real number!"
-    number_pts_blw=ccall((:gsFitting_numPointsBelow,libgismo),Cint,(Ptr{gsCFitting},Cdouble),fit.ptr,threshold)
+    number_pts_blw=ccall((:gsFitting_numPointsBelow, libgismo), Cint,
+        (Ptr{gsCFitting}, Cdouble), fit.ptr, threshold)
     return number_pts_blw
 end
 
@@ -178,6 +187,7 @@ Returns a geometry from the fitting structure
 
 """
 function result(fit::Fitting)::Geometry
-    geom = ccall((:gsFitting_result,libgismo),Ptr{gsCGeometry},(Ptr{gsCFitting},),fit.ptr)
+    geom = ccall(
+        (:gsFitting_result, libgismo), Ptr{gsCGeometry}, (Ptr{gsCFitting},), fit.ptr)
     return Geometry(geom)
 end

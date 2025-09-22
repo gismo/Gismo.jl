@@ -1,11 +1,11 @@
 export
-    THBSplineBasis,
-    HBSplineBasis,
-    THBSpline,
-    HBSpline,
-    tensorLevel,
-    getLevelAtPoint,
-    getElementData
+       THBSplineBasis,
+       HBSplineBasis,
+       THBSpline,
+       HBSpline,
+       tensorLevel,
+       getLevelAtPoint,
+       getElementData
 ########################################################################
 # gsTHBSplineBasis
 ########################################################################
@@ -26,13 +26,17 @@ thb = THBSplineBasis(b)
 """
 function THBSplineBasis(basis::Basis)::Basis
     if (domainDim(basis)==1)
-        b = ccall((:gsTHBSplineBasis1_create,libgismo),Ptr{gsCBasis},(Ptr{gsCBasis},),basis.ptr)
+        b = ccall((:gsTHBSplineBasis1_create, libgismo),
+            Ptr{gsCBasis}, (Ptr{gsCBasis},), basis.ptr)
     elseif (domainDim(basis)==2)
-        b = ccall((:gsTHBSplineBasis2_create,libgismo),Ptr{gsCBasis},(Ptr{gsCBasis},),basis.ptr)
+        b = ccall((:gsTHBSplineBasis2_create, libgismo),
+            Ptr{gsCBasis}, (Ptr{gsCBasis},), basis.ptr)
     elseif (domainDim(basis)==3)
-        b = ccall((:gsTHBSplineBasis3_create,libgismo),Ptr{gsCBasis},(Ptr{gsCBasis},),basis.ptr)
+        b = ccall((:gsTHBSplineBasis3_create, libgismo),
+            Ptr{gsCBasis}, (Ptr{gsCBasis},), basis.ptr)
     elseif (domainDim(basis)==4)
-        b = ccall((:gsTHBSplineBasis4_create,libgismo),Ptr{gsCBasis},(Ptr{gsCBasis},),basis.ptr)
+        b = ccall((:gsTHBSplineBasis4_create, libgismo),
+            Ptr{gsCBasis}, (Ptr{gsCBasis},), basis.ptr)
     else
         error("THBSplineBasis not implemented for this dimension")
     end
@@ -55,13 +59,17 @@ thb = HBSplineBasis(b)
 """
 function HBSplineBasis(basis::Basis)::Basis
     if (domainDim(basis)==1)
-        b = ccall((:gsHBSplineBasis1_create,libgismo),Ptr{gsCBasis},(Ptr{gsCBasis},),basis.ptr)
+        b = ccall((:gsHBSplineBasis1_create, libgismo),
+            Ptr{gsCBasis}, (Ptr{gsCBasis},), basis.ptr)
     elseif (domainDim(basis)==2)
-        b = ccall((:gsHBSplineBasis2_create,libgismo),Ptr{gsCBasis},(Ptr{gsCBasis},),basis.ptr)
+        b = ccall((:gsHBSplineBasis2_create, libgismo),
+            Ptr{gsCBasis}, (Ptr{gsCBasis},), basis.ptr)
     elseif (domainDim(basis)==3)
-        b = ccall((:gsHBSplineBasis3_create,libgismo),Ptr{gsCBasis},(Ptr{gsCBasis},),basis.ptr)
+        b = ccall((:gsHBSplineBasis3_create, libgismo),
+            Ptr{gsCBasis}, (Ptr{gsCBasis},), basis.ptr)
     elseif (domainDim(basis)==4)
-        b = ccall((:gsHBSplineBasis4_create,libgismo),Ptr{gsCBasis},(Ptr{gsCBasis},),basis.ptr)
+        b = ccall((:gsHBSplineBasis4_create, libgismo),
+            Ptr{gsCBasis}, (Ptr{gsCBasis},), basis.ptr)
     else
         error("HBSplineBasis not implemented for this dimension")
     end
@@ -86,16 +94,20 @@ g = THBSpline(thb,coefs)
 ```
 """
 function THBSpline(basis::Basis, coefs::Matrix{Cdouble})::Geometry
-    @assert Base.size(coefs,1) == Gismo.size(basis) "THBSpline: coefs must have the same number of rows as the number of degrees of freedom"
-    cc = EigenMatrix(Base.size(coefs,1),Base.size(coefs,2),pointer(coefs))
+    @assert Base.size(coefs, 1) == Gismo.size(basis) "THBSpline: coefs must have the same number of rows as the number of degrees of freedom"
+    cc = EigenMatrix(Base.size(coefs, 1), Base.size(coefs, 2), pointer(coefs))
     if (domainDim(basis)==1)
-        g = ccall((:gsTHBSpline1_create,libgismo),Ptr{gsCGeometry},(Ptr{gsCBasis},Ptr{EigenMatrix}),basis.ptr,cc.ptr)
+        g = ccall((:gsTHBSpline1_create, libgismo), Ptr{gsCGeometry},
+            (Ptr{gsCBasis}, Ptr{EigenMatrix}), basis.ptr, cc.ptr)
     elseif (domainDim(basis)==2)
-        g = ccall((:gsTHBSpline2_create,libgismo),Ptr{gsCGeometry},(Ptr{gsCBasis},Ptr{EigenMatrix}),basis.ptr,cc.ptr)
+        g = ccall((:gsTHBSpline2_create, libgismo), Ptr{gsCGeometry},
+            (Ptr{gsCBasis}, Ptr{EigenMatrix}), basis.ptr, cc.ptr)
     elseif (domainDim(basis)==3)
-        g = ccall((:gsTHBSpline3_create,libgismo),Ptr{gsCGeometry},(Ptr{gsCBasis},Ptr{EigenMatrix}),basis.ptr,cc.ptr)
+        g = ccall((:gsTHBSpline3_create, libgismo), Ptr{gsCGeometry},
+            (Ptr{gsCBasis}, Ptr{EigenMatrix}), basis.ptr, cc.ptr)
     elseif (domainDim(basis)==4)
-        g = ccall((:gsTHBSpline4_create,libgismo),Ptr{gsCGeometry},(Ptr{gsCBasis},Ptr{EigenMatrix}),basis.ptr,cc.ptr)
+        g = ccall((:gsTHBSpline4_create, libgismo), Ptr{gsCGeometry},
+            (Ptr{gsCBasis}, Ptr{EigenMatrix}), basis.ptr, cc.ptr)
     else
         error("THBSpline not implemented for this dimension")
     end
@@ -120,16 +132,20 @@ g = HBSpline(hb,coefs)
 ```
 """
 function HBSpline(basis::Basis, coefs::Matrix{Cdouble})::Geometry
-    @assert Base.size(coefs,1) == Gismo.size(basis) "HBSpline: coefs must have the same number of rows as the number of degrees of freedom"
-    cc = EigenMatrix(Base.size(coefs,1),Base.size(coefs,2),pointer(coefs))
+    @assert Base.size(coefs, 1) == Gismo.size(basis) "HBSpline: coefs must have the same number of rows as the number of degrees of freedom"
+    cc = EigenMatrix(Base.size(coefs, 1), Base.size(coefs, 2), pointer(coefs))
     if (domainDim(basis)==1)
-        g = ccall((:gsHBSpline1_create,libgismo),Ptr{gsCGeometry},(Ptr{gsCBasis},Ptr{EigenMatrix}),basis.ptr,cc.ptr)
+        g = ccall((:gsHBSpline1_create, libgismo), Ptr{gsCGeometry},
+            (Ptr{gsCBasis}, Ptr{EigenMatrix}), basis.ptr, cc.ptr)
     elseif (domainDim(basis)==2)
-        g = ccall((:gsHBSpline2_create,libgismo),Ptr{gsCGeometry},(Ptr{gsCBasis},Ptr{EigenMatrix}),basis.ptr,cc.ptr)
+        g = ccall((:gsHBSpline2_create, libgismo), Ptr{gsCGeometry},
+            (Ptr{gsCBasis}, Ptr{EigenMatrix}), basis.ptr, cc.ptr)
     elseif (domainDim(basis)==3)
-        g = ccall((:gsHBSpline3_create,libgismo),Ptr{gsCGeometry},(Ptr{gsCBasis},Ptr{EigenMatrix}),basis.ptr,cc.ptr)
+        g = ccall((:gsHBSpline3_create, libgismo), Ptr{gsCGeometry},
+            (Ptr{gsCBasis}, Ptr{EigenMatrix}), basis.ptr, cc.ptr)
     elseif (domainDim(basis)==4)
-        g = ccall((:gsHBSpline4_create,libgismo),Ptr{gsCGeometry},(Ptr{gsCBasis},Ptr{EigenMatrix}),basis.ptr,cc.ptr)
+        g = ccall((:gsHBSpline4_create, libgismo), Ptr{gsCGeometry},
+            (Ptr{gsCBasis}, Ptr{EigenMatrix}), basis.ptr, cc.ptr)
     else
         error("HBSpline not implemented for this dimension")
     end
@@ -144,8 +160,9 @@ Returns the tensor basis of level `level`.
 # Arguments
 - `level::Int`: the level
 """
-function tensorLevel(basis::Basis,level::Cint)::Basis
-    b = ccall((:gsHTensorBasis_tensorLevel,libgismo),Ptr{gsCBasis},(Ptr{gsCBasis},Cint),basis.ptr,level)
+function tensorLevel(basis::Basis, level::Cint)::Basis
+    b = ccall((:gsHTensorBasis_tensorLevel, libgismo), Ptr{gsCBasis},
+        (Ptr{gsCBasis}, Cint), basis.ptr, level)
     return Basis(b)
 end
 
@@ -156,8 +173,8 @@ Returns the level of the basis at a given point.
 - `basis::Basis`: the basis
 - `point::Vector{Cdouble}`: the point
 """
-function getLevelAtPoint(basis::Basis,point::Vector{Cdouble})::Cint
-    return getLevelAtPoint(basis,reshape(point,(length(point),1)))
+function getLevelAtPoint(basis::Basis, point::Vector{Cdouble})::Cint
+    return getLevelAtPoint(basis, reshape(point, (length(point), 1)))
 end
 
 """
@@ -167,11 +184,12 @@ Returns the level of the basis at a given point.
 - `basis::Basis`: the basis
 - `point::Matrix{Cdouble}`: the point
 """
-function getLevelAtPoint(basis::Basis,point::Matrix{Cdouble})::Cint
-    @assert Base.size(point,1) == domainDim(basis) "getLevelAtPoint: point must have the same number of rows as the domain dimension"
-    @assert Base.size(point,2) == 1 "getLevelAtPoint: point must have only one column"
-    pt = EigenMatrix(Base.size(point,1), Base.size(point,2), pointer(point) )
-    return ccall((:gsHTensorBasis_getLevelAtPoint,libgismo),Cint,(Ptr{gsCBasis},Ptr{gsCMatrix}),basis.ptr,pt.ptr)
+function getLevelAtPoint(basis::Basis, point::Matrix{Cdouble})::Cint
+    @assert Base.size(point, 1) == domainDim(basis) "getLevelAtPoint: point must have the same number of rows as the domain dimension"
+    @assert Base.size(point, 2) == 1 "getLevelAtPoint: point must have only one column"
+    pt = EigenMatrix(Base.size(point, 1), Base.size(point, 2), pointer(point))
+    return ccall((:gsHTensorBasis_getLevelAtPoint, libgismo), Cint,
+        (Ptr{gsCBasis}, Ptr{gsCMatrix}), basis.ptr, pt.ptr)
 end
 
 """
@@ -184,7 +202,7 @@ Returns the elements of the basis, with:
 - `basis::Basis`: the basis
 """
 
-function getElementData(basis::Basis)::Tuple{EigenMatrix,EigenMatrixInt,EigenMatrixInt}
+function getElementData(basis::Basis)::Tuple{EigenMatrix, EigenMatrixInt, EigenMatrixInt}
     knotBoxes = EigenMatrix()
     indexBoxes = EigenMatrixInt()
     levelBoxes = EigenMatrixInt()
@@ -192,6 +210,16 @@ function getElementData(basis::Basis)::Tuple{EigenMatrix,EigenMatrixInt,EigenMat
     # - the knotBoxes (elements in parametric coordinates)
     # - the indexBoxes (elements in index coordinates)
     # - the levelBoxes (level of the elements)
-    ccall((:gsHTensorBasis_elements_into,libgismo),Cvoid,(Ptr{gsCBasis},Bool,Bool,Bool,Ptr{EigenMatrix},Ptr{EigenMatrixInt},Ptr{EigenMatrixInt}),basis.ptr,true,true,true,knotBoxes.ptr,indexBoxes.ptr,levelBoxes.ptr)
-    return (knotBoxes,indexBoxes,levelBoxes)
+    ccall((:gsHTensorBasis_elements_into, libgismo),
+        Cvoid,
+        (Ptr{gsCBasis}, Bool, Bool, Bool, Ptr{EigenMatrix},
+            Ptr{EigenMatrixInt}, Ptr{EigenMatrixInt}),
+        basis.ptr,
+        true,
+        true,
+        true,
+        knotBoxes.ptr,
+        indexBoxes.ptr,
+        levelBoxes.ptr)
+    return (knotBoxes, indexBoxes, levelBoxes)
 end
